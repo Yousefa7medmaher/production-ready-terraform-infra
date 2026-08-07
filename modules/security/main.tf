@@ -1,15 +1,15 @@
-############################################
+
 # Security Groups Module - joo-lab
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
 }
 
-############################################
+
 # ALB Security Group
 # Public facing: allows HTTP/HTTPS from the internet
-############################################
+
 
 resource "aws_security_group" "alb" {
   name        = "${local.name_prefix}-alb-sg"
@@ -46,12 +46,12 @@ resource "aws_vpc_security_group_egress_rule" "alb_all_outbound" {
   ip_protocol         = "-1"
 }
 
-############################################
+
 # EC2 (Application) Security Group
 # Private tier: only reachable from the ALB, plus a configurable SSH CIDR
 # (SSH is only useful if instances end up with a bastion/VPN path into the
 # private subnet; kept configurable rather than hardcoded to 0.0.0.0/0).
-############################################
+
 
 resource "aws_security_group" "ec2" {
   name        = "${local.name_prefix}-ec2-sg"
@@ -88,10 +88,10 @@ resource "aws_vpc_security_group_egress_rule" "ec2_all_outbound" {
   ip_protocol         = "-1"
 }
 
-############################################
+
 # Database Security Group (optional)
 # Only reachable from the application tier.
-############################################
+
 
 resource "aws_security_group" "db" {
   count       = var.enable_db_security_group ? 1 : 0

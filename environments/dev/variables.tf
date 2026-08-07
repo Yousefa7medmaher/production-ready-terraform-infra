@@ -64,6 +64,84 @@ variable "enable_db_security_group" {
   default     = true
 }
 
+variable "db_port" {
+  description = "Port used by the database security group"
+  type        = number
+  default     = 5432
+}
+
+variable "db_instance_identifier" {
+  description = "Identifier for the RDS DB instance"
+  type        = string
+  default     = "joo-lab-dev-db"
+}
+
+variable "db_engine" {
+  description = "Database engine type"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_engine_version" {
+  description = "Database engine version"
+  type        = string
+  default     = "15.4"
+}
+
+variable "db_instance_class" {
+  description = "RDS DB instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "allocated_storage" {
+  description = "Storage size for the RDS instance in GiB"
+  type        = number
+  default     = 20
+}
+
+variable "storage_type" {
+  description = "RDS storage type"
+  type        = string
+  default     = "gp3"
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+  default     = "appdb"
+}
+
+variable "db_username" {
+  description = "Master database username"
+  type        = string
+  default     = "appuser"
+}
+
+variable "backup_retention_days" {
+  description = "Number of days to retain automated backups"
+  type        = number
+  default     = 7
+}
+
+variable "deletion_protection" {
+  description = "Whether deletion protection is enabled for the RDS instance"
+  type        = bool
+  default     = false
+}
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip the final snapshot when the DB instance is deleted"
+  type        = bool
+  default     = true
+}
+
+variable "enable_s3_gateway_endpoint" {
+  description = "Whether to create a VPC gateway endpoint for S3."
+  type        = bool
+  default     = true
+}
+
 variable "instance_type" {
   description = "EC2 instance type for the Elastic Beanstalk environment"
   type        = string

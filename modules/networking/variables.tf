@@ -44,6 +44,17 @@ variable "single_nat_gateway" {
   default     = true
 }
 
+variable "enable_s3_gateway_endpoint" {
+  description = "If true, create a VPC gateway endpoint for S3 so private subnets can access S3 without using the NAT gateway."
+  type        = bool
+  default     = true
+}
+
+variable "aws_region" {
+  description = "AWS region used by the VPC endpoint service name."
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags applied to all resources"
   type        = map(string)

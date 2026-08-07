@@ -1,8 +1,8 @@
-############################################
+
 # Networking Module - joo-lab
 # Creates VPC, subnets (public/app/db), IGW,
 # NAT Gateway(s), and route tables.
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
@@ -13,9 +13,9 @@ locals {
   nat_gateway_count = var.single_nat_gateway ? 1 : local.az_count
 }
 
-############################################
+
 # VPC
-############################################
+
 
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
@@ -27,9 +27,9 @@ resource "aws_vpc" "this" {
   })
 }
 
-############################################
+
 # Internet Gateway
-############################################
+
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
@@ -39,9 +39,9 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
-############################################
+
 # Subnets
-############################################
+
 
 resource "aws_subnet" "public" {
   count                   = local.az_count
@@ -80,9 +80,9 @@ resource "aws_subnet" "private_db" {
   })
 }
 
-############################################
+
 # NAT Gateway (Elastic IP + NAT per AZ or single shared)
-############################################
+
 
 resource "aws_eip" "nat" {
   count  = local.nat_gateway_count
@@ -107,9 +107,9 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
-############################################
+
 # Route Tables - Public
-############################################
+
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
@@ -131,11 +131,11 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-############################################
+
 # Route Tables - Private (app + db share egress via NAT)
 # One private route table per AZ when NAT-per-AZ is used,
 # otherwise a single shared private route table.
-############################################
+
 
 resource "aws_route_table" "private" {
   count  = local.nat_gateway_count
@@ -163,4 +163,16 @@ resource "aws_route_table_association" "private_db" {
   count          = local.az_count
   subnet_id      = aws_subnet.private_db[count.index].id
   route_table_id = var.single_nat_gateway ? aws_route_table.private[0].id : aws_route_table.private[count.index].id
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  count            = var.enable_s3_gateway_endpoint ? 1 : 0
+  vpc_id           = aws_vpc.this.id
+  service_name     = "com.amazonaws.${var.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids  = aws_route_table.private[*].id
+
+  tags = merge(var.tags, {
+    Name = "${local.name_prefix}-s3-endpoint"
+  })
 }

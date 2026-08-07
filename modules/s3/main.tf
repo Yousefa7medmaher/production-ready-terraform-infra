@@ -1,7 +1,7 @@
-############################################
+
 # S3 Module - joo-lab
 # Bucket for Elastic Beanstalk application version bundles.
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"

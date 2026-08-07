@@ -16,6 +16,21 @@ ssh_allowed_cidr = "10.0.0.0/16"
 
 enable_db_security_group = true
 
+db_port                 = 5432
+db_instance_identifier = "joo-lab-dev-db"
+db_engine               = "postgres"
+db_engine_version       = "15.4"
+db_instance_class       = "db.t3.micro"
+allocated_storage       = 20
+storage_type            = "gp3"
+db_name                 = "appdb"
+db_username             = "appuser"
+backup_retention_days   = 7
+deletion_protection     = false
+skip_final_snapshot     = true
+
+enable_s3_gateway_endpoint = true
+
 instance_type  = "t3.micro"
 min_instances  = 2
 max_instances  = 4
@@ -25,7 +40,7 @@ log_retention_days  = 30
 cpu_alarm_threshold = 80
 
 create_sns_topic = true
-alarm_email      = ""
+alarm_email      = "youssef230103838@sut.edu.eg"
 
 tags = {
   Owner = "joo-lab-team"

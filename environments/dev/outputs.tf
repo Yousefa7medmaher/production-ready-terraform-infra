@@ -1,6 +1,4 @@
-############################################
 # Networking
-############################################
 
 output "vpc_id" {
   description = "ID of the VPC"
@@ -22,9 +20,9 @@ output "private_db_subnet_ids" {
   value       = module.networking.private_db_subnet_ids
 }
 
-############################################
+
 # Security
-############################################
+
 
 output "alb_security_group_id" {
   description = "ID of the ALB security group"
@@ -41,9 +39,29 @@ output "db_security_group_id" {
   value       = module.security.db_security_group_id
 }
 
-############################################
+output "rds_db_instance_identifier" {
+  description = "Identifier of the RDS DB instance"
+  value       = module.rds.db_instance_identifier
+}
+
+output "rds_db_endpoint" {
+  description = "Endpoint address of the RDS DB instance"
+  value       = module.rds.db_endpoint
+}
+
+output "rds_db_port" {
+  description = "Port of the RDS DB instance"
+  value       = module.rds.db_port
+}
+
+output "rds_db_subnet_group_name" {
+  description = "Name of the RDS DB subnet group"
+  value       = module.rds.db_subnet_group_name
+}
+
+
 # IAM
-############################################
+
 
 output "eb_service_role_name" {
   description = "Name of the Elastic Beanstalk service role"
@@ -60,18 +78,18 @@ output "instance_profile_name" {
   value       = module.iam.instance_profile_name
 }
 
-############################################
+
 # S3
-############################################
+
 
 output "s3_bucket_name" {
   description = "Name of the S3 bucket used for application versions"
   value       = module.s3.bucket_name
 }
 
-############################################
+
 # Elastic Beanstalk
-############################################
+
 
 output "eb_application_name" {
   description = "Name of the Elastic Beanstalk application"
@@ -93,9 +111,9 @@ output "environment_url" {
   value       = "http://${module.elastic_beanstalk.endpoint_url}"
 }
 
-############################################
+
 # CloudWatch
-############################################
+
 
 output "cloudwatch_log_group" {
   description = "CloudWatch log group receiving Elastic Beanstalk instance logs"

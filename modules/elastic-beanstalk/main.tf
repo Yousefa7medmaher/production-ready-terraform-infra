@@ -1,25 +1,24 @@
-############################################
 # Elastic Beanstalk Module - joo-lab
 # Application + Load-Balanced, Auto-Scaled Environment
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
 }
 
-############################################
+
 # Always resolve the latest matching platform version rather than
 # hardcoding a solution stack string that will eventually be deprecated.
-############################################
+
 
 data "aws_elastic_beanstalk_solution_stack" "node" {
   most_recent = true
   name_regex  = var.solution_stack_name_regex
 }
 
-############################################
+
 # Application
-############################################
+
 
 resource "aws_elastic_beanstalk_application" "this" {
   name        = var.project_name
@@ -36,9 +35,9 @@ resource "aws_elastic_beanstalk_application" "this" {
   })
 }
 
-############################################
+
 # Environment
-############################################
+
 
 resource "aws_elastic_beanstalk_environment" "this" {
   name                = "${local.name_prefix}-env"

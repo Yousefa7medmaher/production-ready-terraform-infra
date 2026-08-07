@@ -1,18 +1,17 @@
-############################################
 # IAM Module - joo-lab
 # Elastic Beanstalk Service Role, EC2 Role,
 # and Instance Profile.
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
 }
 
-############################################
+
 # Elastic Beanstalk Service Role
 # Assumed by the Elastic Beanstalk service itself to manage
 # resources (ASG, ELB, CloudWatch) on your behalf.
-############################################
+
 
 data "aws_iam_policy_document" "eb_service_assume_role" {
   statement {
@@ -51,12 +50,12 @@ resource "aws_iam_role_policy_attachment" "eb_service_managed_updates" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
-############################################
+
 # Elastic Beanstalk EC2 Role
 # Assumed by the EC2 instances running the application. Grants
 # the permissions the EB agent needs to pull app versions, ship
 # logs/metrics, and (optionally) act as a worker tier consumer.
-############################################
+
 
 data "aws_iam_policy_document" "eb_ec2_assume_role" {
   statement {
@@ -69,6 +68,7 @@ data "aws_iam_policy_document" "eb_ec2_assume_role" {
     }
   }
 }
+
 
 resource "aws_iam_role" "eb_ec2_role" {
   name               = "${local.name_prefix}-eb-ec2-role"
@@ -87,6 +87,27 @@ resource "aws_iam_role_policy_attachment" "eb_ec2_web_tier" {
 resource "aws_iam_role_policy_attachment" "eb_ec2_multicontainer_docker" {
   role       = aws_iam_role.eb_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+}
+
+resource "aws_iam_role_policy_attachment" "eb_ec2_ssm" {
+  role       = aws_iam_role.eb_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "eb_ec2_cloudwatch_agent" {
+  role       = aws_iam_role.eb_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+
+resource "aws_iam_role_policy_attachment" "eb_ec2_ssm_parameter_store" {
+  role       = aws_iam_role.eb_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "eb_ec2_secrets_manager" {
+  role       = aws_iam_role.eb_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
 }
 
 resource "aws_iam_instance_profile" "eb_ec2_profile" {

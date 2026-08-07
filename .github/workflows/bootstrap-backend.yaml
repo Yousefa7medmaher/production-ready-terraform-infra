@@ -1,0 +1,70 @@
+name: Terraform Bootstrap Backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      state_bucket_name:
+        description: 'Unique S3 bucket name for Terraform state'
+        required: true
+      lock_table_name:
+        description: 'DynamoDB table name for Terraform locking'
+        required: false
+        default: 'terraform-state-lock'
+      aws_region:
+        description: 'AWS region'
+        required: false
+        default: 'us-east-1'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_VERSION: "1.13.2"
+  AWS_ACCOUNT_ID: "333888905249"
+
+jobs:
+  bootstrap:
+    name: Bootstrap AWS backend
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-terraform
+          aws-region: ${{ github.event.inputs.aws_region }}
+
+      - name: Configure Terraform Plugin Cache
+        run: |
+          mkdir -p ~/.terraform.d/plugin-cache
+          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' > ~/.terraformrc
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: bootstrap
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: bootstrap
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan \
+          -var="aws_region=${{ github.event.inputs.aws_region }}" \
+          -var="state_bucket_name=${{ github.event.inputs.state_bucket_name }}" \
+          -var="lock_table_name=${{ github.event.inputs.lock_table_name }}"
+        working-directory: bootstrap
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: bootstrap

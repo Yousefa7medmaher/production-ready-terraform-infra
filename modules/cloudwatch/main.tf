@@ -1,17 +1,17 @@
-############################################
+
 # CloudWatch Module - joo-lab
 # Log group, alarms, and optional SNS notifications.
-############################################
+
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
 }
 
-############################################
+
 # Log Group
 # Elastic Beanstalk streams instance logs here when
 # aws:elasticbeanstalk:cloudwatch:logs / StreamLogs is enabled.
-############################################
+
 
 resource "aws_cloudwatch_log_group" "eb_logs" {
   name              = "/aws/elasticbeanstalk/${local.name_prefix}/var/log/eb-engine.log"
@@ -22,9 +22,9 @@ resource "aws_cloudwatch_log_group" "eb_logs" {
   })
 }
 
-############################################
+
 # SNS Topic (optional) for alarm notifications
-############################################
+
 
 resource "aws_sns_topic" "alarms" {
   count = var.create_sns_topic ? 1 : 0
@@ -46,10 +46,10 @@ locals {
   alarm_actions = var.create_sns_topic ? [aws_sns_topic.alarms[0].arn] : []
 }
 
-############################################
+
 # CPU Utilization Alarm
 # Standard ASG-level CPU alarm.
-############################################
+
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   alarm_name          = "${local.name_prefix}-cpu-high"
@@ -75,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   })
 }
 
-############################################
+
 # ASG Health / "Status Check" Alarm
 #
 # NOTE: EC2's native StatusCheckFailed metric is published per-instance
@@ -89,7 +89,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 # InService instances in the ASG and fires if it drops below the
 # configured minimum, which is a reliable proxy for "instances are
 # failing and not being replaced fast enough".
-############################################
+
 
 resource "aws_cloudwatch_metric_alarm" "asg_in_service_low" {
   alarm_name          = "${local.name_prefix}-asg-in-service-low"
