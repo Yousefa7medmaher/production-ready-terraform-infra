@@ -121,3 +121,4 @@ resource "aws_vpc_security_group_egress_rule" "db_all_outbound" {
   cidr_ipv4          = "0.0.0.0/0"
   ip_protocol         = "-1"
 }
+
