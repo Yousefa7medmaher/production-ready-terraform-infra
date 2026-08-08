@@ -30,9 +30,9 @@ variable "db_engine" {
 }
 
 variable "db_engine_version" {
-  description = "Engine version for the RDS instance"
+  description = "Engine version for the RDS instance. Leave blank to use the provider default supported version."
   type        = string
-  default     = "15.4"
+  default     = ""
 }
 
 variable "db_instance_class" {

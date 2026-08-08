@@ -14,7 +14,7 @@ resource "aws_db_subnet_group" "rds" {
 resource "aws_db_instance" "this" {
   identifier              = var.db_instance_identifier
   engine                  = var.db_engine
-  engine_version          = var.db_engine_version
+  engine_version          = var.db_engine_version != "" ? var.db_engine_version : null
   instance_class          = var.db_instance_class
   allocated_storage       = var.allocated_storage
   storage_type            = var.storage_type

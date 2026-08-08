@@ -83,9 +83,9 @@ variable "db_engine" {
 }
 
 variable "db_engine_version" {
-  description = "Database engine version"
+  description = "Database engine version. Leave blank to use the provider default supported version."
   type        = string
-  default     = "15.4"
+  default     = ""
 }
 
 variable "db_instance_class" {
