@@ -47,7 +47,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-terraform
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/OICD-joo-access
           aws-region: ${{ github.event.inputs.aws_region }}
 
       - name: Configure Terraform Plugin Cache
