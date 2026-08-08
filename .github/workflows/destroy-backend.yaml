@@ -57,8 +57,9 @@ jobs:
         working-directory: bootstrap
 
       - name: Terraform Destroy
-        run: terraform destroy -auto-approve \
-          -var="aws_region=${{ github.event.inputs.aws_region }}" \
-          -var="state_bucket_name=${{ github.event.inputs.state_bucket_name }}" \
-          -var="lock_table_name=${{ github.event.inputs.lock_table_name }}"
+        run: |
+          terraform destroy -auto-approve \
+            -var="aws_region=${{ github.event.inputs.aws_region }}" \
+            -var="state_bucket_name=${{ github.event.inputs.state_bucket_name }}" \
+            -var="lock_table_name=${{ github.event.inputs.lock_table_name }}"
         working-directory: bootstrap
