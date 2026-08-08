@@ -39,7 +39,11 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: false
 
+      - name: OIDC Debugger
+        uses: github/actions-oidc-debugger@v1.0.0
 
+
+    
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
