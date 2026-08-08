@@ -16,12 +16,12 @@ terraform {
 
   # ------------------------------------------------------------------
   # Remote state backend (recommended for anything beyond a solo lab).
-  
+
   # Uncomment and fill in a pre-existing, versioned S3 bucket + DynamoDB
   # lock table before running `terraform init` in a shared/team context.
   # Backend blocks cannot use variables, so values must be hardcoded here
   # or supplied via `terraform init -backend-config=...`.
-  
+
   backend "s3" {
     bucket         = "joo-lab-terraform-state"
     key            = "dev/terraform.tfstate"
