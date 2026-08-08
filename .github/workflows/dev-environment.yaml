@@ -177,7 +177,7 @@ jobs:
         working-directory: environments/dev
 
       - name: Download Binary Plan
-        uses: actions/download-artifact@v3.1.0
+        uses: actions/download-artifact@v4
         with:
           name: terraform-plan
           path: environments/dev
