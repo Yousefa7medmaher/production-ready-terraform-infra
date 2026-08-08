@@ -87,12 +87,13 @@ jobs:
         run: tflint
         working-directory: environments/dev
 
-      # - name: Run Checkov
-      #   uses: bridgecrewio/checkov-action@v12.1347.0
-      #   with:
-      #     directory: environments/dev
-      #     framework: terraform
-      #     quiet: true
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12.1347.0
+        with:
+          directory: environments/dev
+          framework: terraform
+          quiet: true
+        continue-on-error: true
 
       - name: Terraform Plan
         id: plan
