@@ -34,14 +34,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: false
 
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-terraform
           aws-region: ${{ github.event.inputs.aws_region }}
