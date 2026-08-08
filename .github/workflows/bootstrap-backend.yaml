@@ -27,24 +27,27 @@ jobs:
   bootstrap:
     name: Bootstrap AWS backend
     runs-on: ubuntu-latest
-    environment: production
+    environment: dev
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.1.0
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           terraform_wrapper: false
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-terraform
+          # role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/OICD-joo-access
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
           aws-region: ${{ github.event.inputs.aws_region }}
 
+          
       - name: Configure Terraform Plugin Cache
         run: |
           mkdir -p ~/.terraform.d/plugin-cache
